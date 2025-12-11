@@ -1,0 +1,387 @@
+\documentclass[12pt, a4paper, twoside, openright]{report}
+
+% --------------------------------------------------
+% Packages
+% --------------------------------------------------
+\usepackage{fontspec}
+\usepackage{xeCJK}
+
+% --- Watermark Control ---
+\newif\ifwatermark
+\watermarkfalse % Toggle: true = show watermark, false = hide
+
+% --- Final Print Pages Control ---
+\newif\iffinalprint
+\finalprintfalse % Toggle: true to include signed pages (approval, authorization), false to skip
+
+\usepackage{background}
+\ifwatermark
+    \backgroundsetup{
+        contents={\includegraphics[width=6.25cm]{figures/watermark.png}},
+        scale=1,
+        opacity=1, 
+        angle=0,
+        position=current page.center,
+        vshift=0pt,
+        hshift=0pt
+    }
+\else
+    \backgroundsetup{contents={}}
+\fi
+
+% 雙面列印邊界設定：內側 (inner) 較寬以利裝訂
+% 您可以根據學校的具體規定微調這些數值
+\usepackage[a4paper, twoside, inner=3.5cm, outer=2.5cm, top=2.5cm, bottom=2.5cm]{geometry}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{indentfirst} % Indent first paragraph
+\usepackage{emptypage}   % Clears headers/footers on blank pages
+\usepackage{setspace}    % Line spacing
+\usepackage{titlesec}    % Heading formatting
+\usepackage{zhnumber}    % Chinese numbering
+\usepackage{caption}     % Caption positioning
+\usepackage{listings}    % Code blocks
+\usepackage{algorithm}   % For algorithm blocks
+\usepackage{algpseudocode} % For pseudocode inside algorithm
+\usepackage[acronym]{glossaries} % For acronyms and glossaries
+\usepackage{subcaption}  % For subfigures
+\usepackage{xcolor}      % Colors for code
+\definecolor{darkblue}{rgb}{0.0, 0.0, 0.55} % Define darker blue for printing
+
+% Code Listing Settings
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{darkblue}\bfseries, % Use darkblue for keywords too
+    commentstyle=\color{teal},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=5pt,
+    backgroundcolor=\color{white},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    frame=single,
+    tabsize=2,
+    breaklines=true,
+    breakatwhitespace=false,
+    captionpos=b,
+    escapeinside={\%*}{*)}
+}
+
+% Fonts
+\setCJKmainfont[
+    AutoFakeBold=true,
+    AutoFakeSlant=true
+]{AR PL KaitiM Big5}
+\setmainfont{TeX Gyre Termes}
+\usepackage{tocloft}     % TOC formatting
+\usepackage[natbibapa]{apacite} % APA Citation
+\usepackage[colorlinks=true, linkcolor=darkblue, citecolor=darkblue, urlcolor=darkblue]{hyperref} % Clickable links with dark color
+\usepackage[capitalise,noabbrev]{cleveref} % Smart cross-referencing, load AFTER hyperref
+\usepackage{pdfpages}    % To include external PDF pages
+\usepackage{fancyhdr}    % For customizing headers and footers
+\usepackage{lipsum}      % English pseudo-text
+% \usepackage{zhlipsum}    % Removed due to Simplified Chinese characters causing font warnings in Traditional Chinese template
+
+% Manual Traditional Chinese Dummy Text
+\newcommand{\lipsumTC}{
+孔子曰：「大道之行也，天下為公。選賢與能，講信修睦。故人不獨親其親，不獨子其子；使老有所終，壯有所用，幼有所長，矜寡孤獨廢疾者，皆有所養。男有分，女有歸。貨惡其棄於地也，不必藏於己；力惡其不出於身也，不必為己。是故謀閉而不興，盜竊亂賊而不作，故外戶而不閉，是謂大同。」這是一段測試用的繁體中文假文，用以測試排版效果。此處文字將不斷重複以填滿版面。
+孔子曰：「大道之行也，天下為公。選賢與能，講信修睦。故人不獨親其親，不獨子其子；使老有所終，壯有所用，幼有所長，矜寡孤獨廢疾者，皆有所養。男有分，女有歸。貨惡其棄於地也，不必藏於己；力惡其不出於身也，不必為己。是故謀閉而不興，盜竊亂賊而不作，故外戶而不閉，是謂大同。」這是一段測試用的繁體中文假文，用以測試排版效果。
+}
+
+% --------------------------------------------------
+% Configuration
+% --------------------------------------------------
+
+% --- Glossary/Acronym Setup ---
+\makenoidxglossaries % Generate glossaries without external script
+% Define your acronyms here
+\newacronym{nlp}{NLP}{Natural Language Processing}
+\newacronym{cnn}{CNN}{Convolutional Neural Network}
+\newacronym{svm}{SVM}{Support Vector Machine}
+
+% --- Header/Footer Customization (using fancyhdr) ---
+% 這會將所有頁碼統一置於頁尾中央，是常見的學術論文格式要求
+\pagestyle{fancy}
+\fancyhf{} % 清除所有頁眉與頁尾的預設值
+\fancyfoot[C]{\thepage} % 將頁碼置於頁尾 (foot) 的中央 (C)
+\renewcommand{\headrulewidth}{0pt} % 移除頁眉頂部的分隔線
+\renewcommand{\footrulewidth}{0pt} % 移除頁尾底部的分隔線 (可選)
+
+% 重新定義章節起始頁的 'plain' 樣式，使其與 'fancy' 樣式一致
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[C]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+% Line Spacing: 1.5
+\linespread{1.5}
+\setlength{\parindent}{2em} % 2 chars indentation
+
+% Caption Positioning
+\captionsetup[table]{position=top}
+\captionsetup[figure]{position=bottom}
+
+% Heading Formatting
+% Chapter: 20pt, Centered, "第一章 OO"
+% 使用 zhnumber 來自動產生中文章節編號
+\titleformat{\chapter}[block]
+  {\centering\fontsize{20}{30}\selectfont\bfseries}
+  {第\zhnum{chapter}章\quad}
+  {0pt}
+  {}
+\titlespacing*{\chapter}{0pt}{0pt}{20pt} % Adjust spacing as needed
+
+% Section: 18pt, "第一節 OOO"
+\titleformat{\section}
+  {\fontsize{18}{27}\selectfont\bfseries}
+  {第\zhnum{section}節\quad}
+  {0pt}
+  {}
+
+% Subsection: 16pt, "一、OOO"
+\titleformat{\subsection}
+  {\fontsize{16}{24}\selectfont\bfseries}
+  {\zhnum{subsection}、}
+  {0pt}
+  {}
+
+% TOC Formatting to match "第一章..."
+%\renewcommand{\cftchappresnum}{第}
+%\renewcommand{\cftchapaftersnum}{章}
+%\setlength{\cftchapnumwidth}{4em}
+
+% Renaming
+\renewcommand{\contentsname}{\centerline{目　錄}}
+\renewcommand{\listfigurename}{\centerline{圖目錄}}
+\renewcommand{\listtablename}{\centerline{表目錄}}
+\renewcommand{\bibname}{\centerline{參考文獻}}
+\renewcommand{\abstractname}{摘　要}
+
+% --------------------------------------------------
+% Document
+% --------------------------------------------------
+\begin{document}
+
+% --- Cover Page ---
+\begin{titlepage}
+    % \NoBgThispage % Removed to fix conflict. Logic handled by manual check if needed, or accept watermark on title for now to debug.
+    % Actually, better fix: disable background locally
+    \backgroundsetup{contents={}} 
+    \centering
+    \vspace*{1cm}
+    
+    {\fontsize{24}{36}\selectfont 東吳大學巨量資料管理學院\par}
+    {\fontsize{24}{36}\selectfont 資料科學系碩士班碩士論文\par}
+    
+    \vspace{2cm}
+    
+    {\fontsize{18}{27}\selectfont 指導教授：葉大雄 博士\par}
+    % {\fontsize{18}{27}\selectfont \hspace{4.5em}○○○ 博士\par}
+    
+    \vspace{3cm}
+    
+    {\fontsize{24}{36}\selectfont 中文論文題目\par}
+    {\fontsize{22}{33}\selectfont (English Thesis Title)\par}
+    \vspace{1cm}
+    
+    \vfill
+    
+    {\fontsize{18}{27}\selectfont 研究生：小叮噹 撰\par}
+    \newcounter{rocYear}
+    \setcounter{rocYear}{\year}
+    \addtocounter{rocYear}{-1911}
+    \newcounter{rocMonth}
+    \setcounter{rocMonth}{\month}
+    {\fontsize{18}{27}\selectfont 中華民國 \zhnum{rocYear} 年 \zhnum{rocMonth} 月\par}
+    
+    \vspace*{1cm}
+\end{titlepage}
+
+% --- 審定頁與授權頁 (無頁碼) ---
+% 使用 \cleardoublepage 確保每個獨立頁面都從右頁（奇數頁）開始
+% \includepdf 會插入指定的 PDF 檔案，且預設不會有頁首、頁尾或頁碼
+% 請將 'approval_page.pdf' 和 'ncl_authorization.pdf' 換成您自己的檔案路徑
+
+% 當 \finalprinttrue 時，才會包含以下審定頁與授權頁
+\iffinalprint
+    \cleardoublepage
+    \includepdf[pages=-, pagecommand={\backgroundsetup{contents={}}}]{approval_page.pdf} % 口試委員審定頁
+
+    \cleardoublepage
+    \includepdf[pages=-, pagecommand={\backgroundsetup{contents={}}}]{ncl_authorization.pdf} % 國家圖書館授權頁
+\fi
+
+% --- Front Matter (Roman Numbering) ---
+\cleardoublepage % 確保摘要從右頁開始，且頁碼計算正確
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+% Chinese Abstract
+\chapter*{摘　要}
+\addcontentsline{toc}{chapter}{摘　要}
+\lipsumTC
+
+% English Abstract
+\cleardoublepage
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+\lipsum[1]
+
+% Table of Contents
+\cleardoublepage
+\tableofcontents
+
+% List of Tables
+\cleardoublepage
+\addcontentsline{toc}{chapter}{表目錄}
+\listoftables
+
+% List of Figures
+\cleardoublepage
+\addcontentsline{toc}{chapter}{圖目錄}
+\listoffigures
+
+% List of Acronyms
+\cleardoublepage
+\addcontentsline{toc}{chapter}{名詞縮寫對照表}
+\printnoidxglossary[type=acronym, title={名詞縮寫對照表}]
+
+
+% --- Main Matter (Arabic Numbering) ---
+\cleardoublepage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+% Chapter 1
+\chapter{緒論}
+\section{研究背景}
+本研究探討了機器學習在現代社會中的應用。根據 \citet{vaswani2017attention} 提出的 Transformer 架構，\gls{nlp} (Natural Language Processing) 取得了巨大突破。如 \cref{fig:main_fig_with_subs} 所示，我們可以比較不同模型的表現。\lipsumTC
+
+\begin{table}[ht]
+    \centering
+    \caption{範例表格 (Example Table)}
+    \label{tab:example}
+    \begin{tabular}{c c}
+        \toprule
+        Item & Value \\
+        \midrule
+        A & 1 \\
+        B & 2 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{figure}[ht] % A figure with two subfigures
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/watermark.png}
+        \caption{子圖一 (Subfigure A)}
+        \label{fig:sub1}
+    \end{subfigure}
+    \hfill % or \quad
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/watermark.png}
+        \caption{子圖二 (Subfigure B)}
+        \label{fig:sub2}
+    \end{subfigure}
+    \caption{範例圖片（包含子圖）}
+    \label{fig:main_fig_with_subs}
+\end{figure}
+
+\section{研究目的}
+\citet{einstein} 的研究奠定了物理學基礎，而 \citet{knuth1984} 則為數位排版做出了貢獻。本計畫旨在整合這些理論。\lipsumTC
+
+\section{研究範圍}
+相關技術參考了 LaTeX 專案 \citep{latexproject}。\lipsumTC
+如 \cref{tab:example} 所示，這是一個表格引用。
+
+% Chapter 2
+\chapter{文獻探討}
+\section{相關理論}
+\lipsumTC
+
+% Chapter 3
+\chapter{研究方法}
+\section{資料收集}
+\lipsumTC
+
+\section{排版展示 (Formatting Demo)}
+本節展示範本對各種格式的支援：
+
+\subsection{字體效果 (Fonts)}
+\begin{itemize}
+    \item \textbf{粗體 (Bold)}：這是一段\textbf{粗體中文}與 \textbf{Bold English}。
+    \item \textit{斜體 (Italic)}：這是一段\textit{斜體中文}與 \textit{Italic English}。
+    \item \texttt{等寬字體 (Monospace)}：這是一段 \texttt{程式碼字體}。
+\end{itemize}
+
+\subsection{數學公式 (Mathematics)}
+行內公式：$E = mc^2$。獨立公式如下：
+\begin{equation}
+    f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}
+\end{equation}
+
+\subsection{程式碼 (Code)}
+以下為 Python 程式碼範例：
+\begin{lstlisting}[language=Python, caption={Python 範例代碼}]
+def hello_world():
+    # Print a message
+    print("Hello, World!")
+    return True
+
+if __name__ == "__main__":
+    hello_world()
+\end{lstlisting}
+
+\subsection{演算法實作 (Algorithm)}
+本研究使用梯度下降法進行模型優化，其偽代碼如 \cref{alg:gd} 所示。
+\begin{algorithm}[ht]
+    \caption{梯度下降法 (Gradient Descent)}
+    \label{alg:gd}
+    \begin{algorithmic}[1]
+        \Require 學習率 $\alpha$, 初始參數 $\theta$
+        \Ensure 學習後的參數 $\theta$
+        \While{$\theta$尚未收斂}
+            \State 計算損失函數對 $\theta$ 的梯度: $J'(\theta)$
+            \State 更新參數: $\theta \gets \theta - \alpha J'(\theta)$
+        \EndWhile
+        \State \Return $\theta$
+    \end{algorithmic}
+\end{algorithm}
+
+% Chapter 4
+\chapter{結果與討論}
+\section{分析結果}
+\lipsumTC
+
+% Chapter 5
+\chapter{結論與建議}
+\section{結論}
+\lipsumTC
+
+% --- References ---
+\cleardoublepage
+\bibliographystyle{apacite}
+\nocite{*} 
+\bibliography{references}
+
+% --- Appendix ---
+\cleardoublepage
+\appendix % 啟用附錄模式，後續的 chapter 會變成 "附錄 A", "附錄 B" ...
+
+\chapter{附錄範例一}
+\lipsumTC
+
+\chapter{附錄範例二}
+\lipsum[2]
+
+\end{document}
